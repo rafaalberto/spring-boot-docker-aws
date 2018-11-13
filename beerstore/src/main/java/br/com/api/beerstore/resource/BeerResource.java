@@ -1,7 +1,7 @@
 package br.com.api.beerstore.resource;
 
 import br.com.api.beerstore.model.Beer;
-import br.com.api.beerstore.repository.BeerRepository;
+import br.com.api.beerstore.service.BeerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +14,30 @@ import java.util.List;
 public class BeerResource {
 
     @Autowired
-    private BeerRepository beerRepository;
+    private BeerService beerService;
 
     @GetMapping
-    public List<Beer> findAll(){
-        return beerRepository.findAll();
+    public List<Beer> findAll() {
+        return beerService.findAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Beer create(@Valid @RequestBody Beer beer) {
-        int result = 5 / 0;
-        return beerRepository.save(beer);
+        return beerService.save(beer);
     }
+
+    @PutMapping("/{id}")
+    public Beer update(@PathVariable Long id, @Valid @RequestBody Beer beer){
+        beer.setId(id);
+        return beerService.save(beer);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        beerService.delete(id);
+    }
+
 
 }

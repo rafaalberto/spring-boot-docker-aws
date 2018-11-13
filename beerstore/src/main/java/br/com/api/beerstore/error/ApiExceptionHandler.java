@@ -1,5 +1,6 @@
 package br.com.api.beerstore.error;
 
+import br.com.api.beerstore.exception.BusinessException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -40,6 +41,22 @@ public class ApiExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidFormatException(InvalidFormatException exception, Locale locale){
+        final String errorCode = "generic-1";
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+        final ErrorResponse errorResponse = ErrorResponse.of(status, toApiError(errorCode, locale, exception.getValue()));
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException exception, Locale locale){
+        final String errorCode = exception.getCode();
+        final HttpStatus status = exception.getStatus();
+        final ErrorResponse errorResponse = ErrorResponse.of(status, toApiError(exception.getCode(), locale));
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception exception, Locale locale){
         LOGGER.error("Error not expected", exception);
@@ -47,14 +64,6 @@ public class ApiExceptionHandler {
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         final ErrorResponse errorResponse = ErrorResponse.of(status, toApiError(errorCode, locale));
         return ResponseEntity.status(status).body(errorResponse);
-    }
-
-    @ExceptionHandler(InvalidFormatException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidFormatException(InvalidFormatException exception, Locale locale){
-        final String errorCode = "generic-1";
-        final HttpStatus status = HttpStatus.BAD_REQUEST;
-        final ErrorResponse errorResponse = ErrorResponse.of(status, toApiError(errorCode, locale, exception.getValue()));
-        return ResponseEntity.badRequest().body(errorResponse);
     }
 
     private ApiError toApiError(String code, Locale locale, Object... args){
