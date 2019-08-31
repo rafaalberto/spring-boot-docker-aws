@@ -45,7 +45,7 @@ public class BeerService {
     }
 
     private boolean isUpdatingToADifferentBeer(Beer beer, Optional<Beer> beerDB) {
-        return beer.alreadExist() && !beerDB.get().equals(beer);
+        return beer.alreadyExist() && !beerDB.get().equals(beer);
     }
 
 }

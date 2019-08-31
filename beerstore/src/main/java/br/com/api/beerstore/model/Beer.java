@@ -39,7 +39,7 @@ public class Beer {
     }
 
     @JsonIgnore
-    public boolean alreadExist() {
+    public boolean alreadyExist() {
         return getId() != null;
     }
 
