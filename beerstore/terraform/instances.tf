@@ -12,11 +12,27 @@ resource "aws_instance" "intances" {
 
   key_name = "${aws_key_pair.keypair.key_name}"
 
-  security_groups = ["${aws_security_group.allow_ssh.id}"]
+  vpc_security_group_ids = ["${aws_security_group.allow_ssh.id}",
+    "${aws_security_group.allow_outbound.id}"]
 
   tags = {
     Name = "beerstore-instances"
   }
+}
+
+data "template_file" "hosts" {
+  template = "${file("./template/hosts.tpl")}"
+
+  vars = {
+    PUBLIC_IP_0 = "${aws_instance.intances.*.public_ip[0]}"
+    PUBLIC_IP_1 = "${aws_instance.intances.*.public_ip[1]}"
+    PUBLIC_IP_2 = "${aws_instance.intances.*.public_ip[2]}"
+  }
+}
+
+resource "local_file" "hosts" {
+  content = "${data.template_file.hosts.rendered}"
+  filename = "./hosts"
 }
 
 output "public_ips" {
