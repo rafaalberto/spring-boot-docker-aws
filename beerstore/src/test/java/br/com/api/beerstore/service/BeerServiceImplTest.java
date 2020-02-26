@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
 
-public class BeerServiceTest {
+public class BeerServiceImplTest {
 
     private BeerServiceImpl beerService;
 
@@ -50,6 +50,19 @@ public class BeerServiceTest {
         assertThat(beerSaved.getId(), equalTo(10L));
         assertThat(beerSaved.getName(), equalTo("Heineken"));
         assertThat(beerSaved.getType(), equalTo(BeerType.LAGER));
+    }
+
+    @Test
+    public void should_find_beer(){
+        Beer beer = new Beer();
+        beer.setName("Heineken");
+        beer.setType(BeerType.LAGER);
+        beer.setVolume(new BigDecimal("355"));
+
+        when(beerRepository.save(beer)).thenReturn(beerInDB);
+        Beer beerSaved = beerService.save(beer);
+
+        assertThat(beerSaved.getId(), equalTo(10L));
     }
 
     @Test(expected = BeerAlreadyExistException.class)

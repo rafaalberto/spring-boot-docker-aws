@@ -22,6 +22,11 @@ public class BeerResource {
         return beerService.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Beer findById(@PathVariable Long id){
+        return beerService.findById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Beer create(@Valid @RequestBody Beer beer) {

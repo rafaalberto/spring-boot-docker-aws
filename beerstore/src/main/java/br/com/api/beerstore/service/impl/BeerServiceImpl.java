@@ -24,6 +24,15 @@ public class BeerServiceImpl implements BeerService {
         return beerRepository.findAll();
     }
 
+    @Override
+    public Beer findById(final Long id) {
+        Optional<Beer> beerDB = beerRepository.findById(id);
+        if(!beerDB.isPresent()) {
+            throw new EntityNotFoundException();
+        }
+        return beerDB.get();
+    }
+
     public Beer save(final Beer beer) {
         verifyIfBeerExist(beer);
         return beerRepository.save(beer);

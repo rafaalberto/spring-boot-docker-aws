@@ -8,6 +8,8 @@ public interface BeerService {
 
     List<Beer> findAll();
 
+    Beer findById(Long id);
+
     Beer save(final Beer beer);
 
     void delete(Long id);
