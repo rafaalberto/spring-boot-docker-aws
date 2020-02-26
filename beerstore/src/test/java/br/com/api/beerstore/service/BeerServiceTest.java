@@ -4,6 +4,7 @@ import br.com.api.beerstore.exception.BeerAlreadyExistException;
 import br.com.api.beerstore.model.Beer;
 import br.com.api.beerstore.model.BeerType;
 import br.com.api.beerstore.repository.BeerRepository;
+import br.com.api.beerstore.service.impl.BeerServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 public class BeerServiceTest {
 
-    private BeerService beerService;
+    private BeerServiceImpl beerService;
 
     private Beer beerInDB;
 
@@ -28,7 +29,7 @@ public class BeerServiceTest {
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
-        beerService = new BeerService(beerRepository);
+        beerService = new BeerServiceImpl(beerRepository);
         beerInDB = new Beer();
         beerInDB.setId(10L);
         beerInDB.setName("Heineken");

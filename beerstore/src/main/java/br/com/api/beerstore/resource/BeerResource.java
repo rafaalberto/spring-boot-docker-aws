@@ -40,5 +40,4 @@ public class BeerResource {
         beerService.delete(id);
     }
 
-
 }
